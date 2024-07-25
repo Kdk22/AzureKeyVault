@@ -9,8 +9,7 @@ resource "azuredevops_project" "project" {
   name               = local.ado_project_name
   description        = local.ado_project_description
   visibility         = local.ado_project_visibility
-  version_control    = "Git"   # This will always be Git for me
-  work_item_template = "Agile" # Not sure if this matters, check back later
+  version_control    = "Git" 
 
   features = {
     # Only enable pipelines for now
@@ -25,7 +24,7 @@ resource "azuredevops_project" "project" {
 
 resource "azuredevops_serviceendpoint_github" "serviceendpoint_github" {
   project_id            = azuredevops_project.project.id
-  service_endpoint_name = "terraform-tuesdays"
+  service_endpoint_name = "ado-sm"
 
   auth_personal {
     personal_access_token = var.ado_github_pat
@@ -40,7 +39,7 @@ resource "azuredevops_resource_authorization" "auth" {
 
 resource "azuredevops_variable_group" "variablegroup" {
   project_id   = azuredevops_project.project.id
-  name         = "terraform-tuesdays"
+  name         = "ado-sm"
   description  = "Variable group for pipelines"
   allow_access = true
 
@@ -59,24 +58,13 @@ resource "azuredevops_variable_group" "variablegroup" {
     value = azuredevops_project.project.id
   }
 
-  variable {
-    name  = "pr_pipeline_id"
-    value = azuredevops_build_definition.pipelines["pr"].id
-  }
-
-  variable {
-    name  = "terraform_version"
-    value = var.ado_terraform_version
-  }
-
 }
-
+# Here this is creating the pipeline. Pipeline authorization is dependent on github 
 resource "azuredevops_build_definition" "pipelines" {
-  for_each = var.ado_pipeline_yaml_paths
 
   depends_on = [azuredevops_resource_authorization.auth]
   project_id = azuredevops_project.project.id
-  name       = "${each.key} pipeline"
+  name       = local.ado_pipeline_name_1
 
   ci_trigger {
     use_yaml = true
@@ -86,7 +74,7 @@ resource "azuredevops_build_definition" "pipelines" {
     repo_type             = "GitHub"
     repo_id               = var.ado_github_repo
     branch_name           = "main"
-    yml_path              = each.value
+    yml_path              = var.ado_pipeline_yaml_path_1
     service_connection_id = azuredevops_serviceendpoint_github.serviceendpoint_github.id
   }
 
