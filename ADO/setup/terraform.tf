@@ -5,23 +5,23 @@ terraform {
       version = ">=0.1.0"
     }
 
-    azurerm = {
+       azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2.0"
+      version = "~> 3.0"
 
     }
 
     azuread = {
-      source  = "hashicorp/azuread"
-      version = "~> 1.0"
+      source = "hashicorp/azuread"
+      version = "~> 2.0"
     }
 
   }
-  backend "remote" {
-    organization = "ned-in-the-cloud"
+   cloud {
+    organization = "run_the_best"
 
     workspaces {
-      name = "terraform-tuesday-ado-setup"
+      name = "run_with_fun"
     }
   }
 }

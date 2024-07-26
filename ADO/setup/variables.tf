@@ -12,9 +12,9 @@ variable "ado_github_repo" {
 variable "ado_pipeline_yaml_paths" {
   type        = map(string)
   description = "Path to the yaml for the pipelines"
-  default     = "ADO/vnet/azurepipelines.yaml"
+  default     = "ADO\vnet\azurepipelines.yaml"
 }
-
+ADO\vnet\azurepipelines.yaml
 variable "ado_github_pat" {
   type        = string
   description = "Personal authentication token for GitHub repo"

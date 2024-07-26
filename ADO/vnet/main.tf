@@ -71,4 +71,7 @@ module "network" {
   subnet_names        = ["subnet1", "subnet2","subnet3"]
 
   depends_on = [azurerm_resource_group.vnet]
+  tags = {
+    environment = "pipeline"
+  }
 }
