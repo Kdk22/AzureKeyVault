@@ -6,13 +6,13 @@ variable "ado_org_service_url" {
 variable "ado_github_repo" {
   type        = string
   description = "Name of the repository in the format <GitHub Org>/<RepoName>"
-  default     = "/Kdk22/AzureKeyVault"
+  default     = "Kdk22/AzureKeyVault"
 }
 
 variable "ado_pipeline_yaml_paths" {
   type        = map(string)
   description = "Path to the yaml for the pipelines"
-  default     = "ADO\vnet\azure-pipelines.yaml"
+  default     = "ADO/vnet/azure-pipelines.yaml"
 }
 
 variable "ado_github_pat" {
@@ -54,6 +54,8 @@ locals {
   az_key_vault_name = "${var.prefix}${random_integer.suffix.result}"
 
   pipeline_variables = {
+    storageaccount = azurerm_storage_account.sa.name
+    container-name = var.az_container_name
     key = var.az_state_key
     sas-token = data.azurerm_storage_account_sas.state.sas
     az-client-id = azuread_application.resource_creation.application_id

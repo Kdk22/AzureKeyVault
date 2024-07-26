@@ -53,11 +53,6 @@ resource "azuredevops_variable_group" "variablegroup" {
     value = local.az_key_vault_name
   }
 
-  variable {
-    name  = "project_id"
-    value = azuredevops_project.project.id
-  }
-
 }
 # Here this is creating the pipeline. Pipeline authorization is dependent on github 
 resource "azuredevops_build_definition" "pipelines" {
