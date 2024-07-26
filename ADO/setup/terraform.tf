@@ -15,13 +15,16 @@ terraform {
       source = "hashicorp/azuread"
       version = "~> 1.0"
     }
+ 
+}
 
-  }
-   backend "remote" {
+    cloud {
     organization = "run_the_best"
 
     workspaces {
       name = "run_with_fun"
     }
+
   }
+
 }
