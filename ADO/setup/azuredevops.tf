@@ -9,11 +9,12 @@ resource "azuredevops_project" "project" {
   name               = local.ado_project_name
   description        = local.ado_project_description
   visibility         = local.ado_project_visibility
-  version_control    = "Git" 
+  version_control    = "Git"
+  work_item_template = "Agile"
 
   features = {
     # Only enable pipelines for now
-    "testplans"    = "disabled"q
+    "testplans"    = "disabled"
     "artifacts"    = "disabled"
     "boards"       = "disabled"
     "repositories" = "disabled"
