@@ -17,7 +17,7 @@ terraform {
     }
 
   }
-   cloud {
+   backend "remote" {
     organization = "run_the_best"
 
     workspaces {
