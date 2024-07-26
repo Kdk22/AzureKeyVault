@@ -23,7 +23,7 @@ stages:
       inputs:
         terraformVersion: 'latest'
 
-    # Azure Key Vault
+    # Azure Key Vault`
     # Download Azure Key Vault secrets
     - task: AzureKeyVault@1
       inputs:
