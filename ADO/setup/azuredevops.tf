@@ -101,3 +101,4 @@ resource "azuredevops_resource_authorization" "kv_auth" {
 }
 
 # Key Vault task is here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-key-vault?view=azure-devops
+
