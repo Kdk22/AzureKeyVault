@@ -1,3 +1,4 @@
+/*
 data "azurerm_client_config" "current" {}
 
 data "azurerm_subscription" "current" {}
@@ -56,3 +57,4 @@ resource "azurerm_key_vault_secret" "pipeline" {
   value        = each.value
   key_vault_id = azurerm_key_vault.setup.id
 }
+*/

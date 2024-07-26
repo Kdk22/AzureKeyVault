@@ -10,6 +10,13 @@ terraform {
 
     }
   }
+    cloud {
+    organization = "run_the_best"
+
+    workspaces {
+      name = "run_with_fun"
+    }
+  }
 
 }
 

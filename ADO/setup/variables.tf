@@ -9,10 +9,10 @@ variable "ado_github_repo" {
   default     = "Kdk22/AzureKeyVault"
 }
 
-variable "ado_pipeline_yaml_paths" {
-  type        = map(string)
-  description = "Path to the yaml for the pipelines"
-  default     = "ADO/vnet/azure-pipelines.yaml"
+variable "ado_pipeline_yaml_path_1" {
+  type        = string
+  description = "Path to the yaml for the first pipeline"
+  default     = "AKV-SM/ADO/vnet/azure-pipelines.yaml"
 }
 
 variable "ado_github_pat" {
@@ -24,7 +24,7 @@ variable "ado_github_pat" {
 variable "prefix" {
   type        = string
   description = "Naming prefix for resources"
-  default     = "learn"
+  default     = "tacos"
 }
 
 variable "az_location" {
@@ -79,30 +79,3 @@ locals {
   az_storage_account_name = "${lower(var.prefix)}${random_integer.suffix.result}"
 
 }
-
-/*
-locals {
-  ado_project_name        = "${var.prefix}-project-${random_integer.suffix.result}"
-  ado_project_description = "Project for ${var.prefix}"
-  ado_project_visibility  = "private"
-  ado_pipeline_name_1     = "${var.prefix}-pipeline-1"
-
-  az_resource_group_name  = "${var.prefix}${random_integer.suffix.result}"
-  az_storage_account_name = "${lower(var.prefix)}${random_integer.suffix.result}"
-  az_key_vault_name = "${var.prefix}${random_integer.suffix.result}"
-
-  pipeline_variables = {
-    storageaccount = azurerm_storage_account.sa.name
-    container-name = var.az_container_name
-    key = var.az_state_key
-    sas-token = data.azurerm_storage_account_sas.state.sas
-    az-client-id = azuread_application.resource_creation.application_id
-    az-client-secret = random_password.resource_creation.result
-    az-subscription = data.azurerm_client_config.current.subscription_id
-    az-tenant = data.azurerm_client_config.current.tenant_id
-  } 
-
-  azad_service_connection_sp_name = "${var.prefix}-service-connection-${random_integer.suffix.result}"
-  azad_resource_creation_sp_name = "${var.prefix}-resource-creation-${random_integer.suffix.result}"
-}
-*/

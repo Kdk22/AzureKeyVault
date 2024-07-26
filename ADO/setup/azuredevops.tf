@@ -9,8 +9,8 @@ resource "azuredevops_project" "project" {
   name               = local.ado_project_name
   description        = local.ado_project_description
   visibility         = local.ado_project_visibility
-  version_control    = "Git"
-  work_item_template = "Agile"
+  version_control    = "Git"   # This will always be Git for me
+  work_item_template = "Agile" # Not sure if this matters, check back later
 
   features = {
     # Only enable pipelines for now
@@ -25,7 +25,7 @@ resource "azuredevops_project" "project" {
 
 resource "azuredevops_serviceendpoint_github" "serviceendpoint_github" {
   project_id            = azuredevops_project.project.id
-  service_endpoint_name = "akv-sm"
+  service_endpoint_name = "AzureKeyVault"
 
   auth_personal {
     personal_access_token = var.ado_github_pat
@@ -40,23 +40,57 @@ resource "azuredevops_resource_authorization" "auth" {
 
 resource "azuredevops_variable_group" "variablegroup" {
   project_id   = azuredevops_project.project.id
-  name         = "akv-sm"
+  name         = "AzureKeyVault"
   description  = "Variable group for pipelines"
   allow_access = true
 
   variable {
-    name  = "service_name"
-    value = "key_vault"
+    name  = "storageaccount"
+    value = azurerm_storage_account.sa.name
   }
 
   variable {
-    name  = "key_vault_name"
-    value = local.az_key_vault_name
+    name  = "container_name"
+    value = var.az_container_name
   }
 
+  variable {
+    name  = "key"
+    value = var.az_state_key
+  }
+
+  variable {
+    name         = "sas_token"
+    secret_value = data.azurerm_storage_account_sas.state.sas
+    is_secret    = true
+  }
+
+  variable {
+    name         = "az_client_id"
+    secret_value = var.az_client_id
+    is_secret    = true
+  }
+
+  variable {
+    name         = "az_client_secret"
+    secret_value = var.az_client_secret
+    is_secret    = true
+  }
+
+  variable {
+    name         = "az_subscription"
+    secret_value = var.az_subscription
+    is_secret    = true
+  }
+
+  variable {
+    name         = "az_tenant"
+    secret_value = var.az_tenant
+    is_secret    = true
+  }
 }
-# Here this is creating the pipeline. Pipeline authorization is dependent on github 
-resource "azuredevops_build_definition" "pipelines" {
+
+resource "azuredevops_build_definition" "pipeline_1" {
 
   depends_on = [azuredevops_resource_authorization.auth]
   project_id = azuredevops_project.project.id
@@ -80,26 +114,4 @@ resource "azuredevops_build_definition" "pipelines" {
 ## There needs to be a service connection to an Azure sub with the key vault
 ## https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/serviceendpoint_azurerm
 
-resource "azuredevops_serviceendpoint_azurerm" "key_vault" {
-  project_id            = azuredevops_project.project.id
-  service_endpoint_name = "key_vault"
-  description           = "Azure Service Endpoint for Key Vault Access"
-
-  credentials {
-    serviceprincipalid  = azuread_application.service_connection.application_id
-    serviceprincipalkey = random_password.service_connection.result
-  }
-
-  azurerm_spn_tenantid      = data.azurerm_client_config.current.tenant_id
-  azurerm_subscription_id   = data.azurerm_client_config.current.subscription_id
-  azurerm_subscription_name = data.azurerm_subscription.current.display_name
-}
-
-resource "azuredevops_resource_authorization" "kv_auth" {
-  project_id  = azuredevops_project.project.id
-  resource_id = azuredevops_serviceendpoint_azurerm.key_vault.id
-  authorized  = true
-}
-
 # Key Vault task is here: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-key-vault?view=azure-devops
-

@@ -1,4 +1,4 @@
-/*
+
 terraform {
   required_providers {
     azuredevops = {
@@ -19,14 +19,7 @@ terraform {
  
 }
 
-    cloud {
-    organization = "run_the_best"
 
-    workspaces {
-      name = "run_with_fun"
-    }
 
   }
 
-}
-*/

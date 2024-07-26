@@ -1,130 +1,135 @@
-# Azure DevOps pipeline for Azure deployment
-
 variables:
   - group: AzureKeyVault
-  
-  trigger:
-    branches:
-      include:
+
+trigger:
+  branches:
+    include:
       - main
-    paths:
-      include:
+  paths:
+    include:
       - AKV-SM/ADO/vnet
-  
-  stages:
+
+stages:
   - stage: Validate
     displayName: Validate
     jobs:
-    - job: validate
-      pool:
-        vmImage: ubuntu-latest
-      steps:
-      - task: TerraformInstaller@0
-        displayName: Install Terraform
-        inputs:
-          terraformVersion: 'latest'
-  
-    # Init
-      - task: TerraformCLI@0
-        displayName: Initialize Terraform
-        env:
-          ARM_SAS_TOKEN: $(sas_token)
-        inputs:
-          command: 'init'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
-          commandOptions: '-backend-config=storage_account_name=$(storageaccount) -backend-config=container_name=$(container_name) -backend-config=key=$(key)'
-          backendType: 'selfConfigured'
-  
-    # Validate
-      - task: TerraformCLI@0
-        displayName: Validate Config
-        inputs:
-          command: 'validate'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
-      
+      - job: validate
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: TerraformInstaller@0
+            displayName: Install Terraform
+            inputs:
+              terraformVersion: 'latest'
+
+          # Init
+          - task: TerraformCLI@0
+            displayName: Initialize Terraform
+            env:
+              ARM_SAS_TOKEN: $(sas_token)
+            inputs:
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
+              commandOptions: '-backend-config=storage_account_name=$(storageaccount) -backend-config=container_name=$(container_name) -backend-config=key=$(key)'
+              backendType: 'selfConfigured'
+
+          # Validate
+          - task: TerraformCLI@0
+            displayName: Validate Config
+            inputs:
+              command: 'validate'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
+
   - stage: Plan
     displayName: Plan
     jobs:
-    - job: plan
-      pool:
-        vmImage: ubuntu-latest
-      steps:
-      - task: TerraformInstaller@0
-        displayName: Install Terraform
-        inputs:
-          terraformVersion: 'latest'
-  
-    # Init
-      - task: TerraformCLI@0
-        displayName: Initialize Terraform
-        env:
-          ARM_SAS_TOKEN: $(sas_token)
-        inputs:
-          command: 'init'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
-          commandOptions: '-backend-config=storage_account_name=$(storageaccount) -backend-config=container_name=$(container_name) -backend-config=key=$(key)'
-          backendType: 'selfConfigured'
-  
-    # Plan
-      - task: TerraformCLI@0
-        displayName: Plan Terraform Deployment
-        env:
-          ARM_SAS_TOKEN: $(sas_token)
-          ARM_CLIENT_ID: $(az_client_id)
-          ARM_CLIENT_SECRET: $(az_client_secret)
-          ARM_SUBSCRIPTION_ID: $(az_subscription)
-          ARM_TENANT_ID: $(az_tenant)
-        inputs:
-          command: 'plan'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
-  
+      - job: plan
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: TerraformInstaller@0
+            displayName: Install Terraform
+            inputs:
+              terraformVersion: 'latest'
+
+          # Init
+          - task: TerraformCLI@0
+            displayName: Initialize Terraform
+            env:
+              ARM_SAS_TOKEN: $(sas_token)
+            inputs:
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
+              commandOptions: '-backend-config=storage_account_name=$(storageaccount) -backend-config=container_name=$(container_name) -backend-config=key=$(key)'
+              backendType: 'selfConfigured'
+
+          # Plan
+          - task: TerraformCLI@0
+            displayName: Plan Terraform Deployment
+            env:
+              ARM_SAS_TOKEN: $(sas_token)
+              ARM_CLIENT_ID: $(az_client_id)
+              ARM_CLIENT_SECRET: $(az_client_secret)
+              ARM_SUBSCRIPTION_ID: $(az_subscription)
+              ARM_TENANT_ID: $(az_tenant)
+            inputs:
+              command: 'plan'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
+
   # Approve
   - stage: Approve
     displayName: Approve
     jobs:
-    - job: approve
-      displayName: Wait for approval
-      pool: server
-      steps: 
-      - task: ManualValidation@0
-        timeoutInMinutes: 60
-        inputs:
-          notifyUsers: 'utft0@gmail.com'
-          instructions: 'Review the plan in the next hour'
-  
+      - job: approve
+        displayName: Wait for approval
+        pool: server
+        steps:
+          - task: ManualValidation@0
+            timeoutInMinutes: 60
+            inputs:
+              notifyUsers: 'utft0@gmail.com'
+              instructions: 'Review the plan in the next hour'
+
   - stage: Apply
     displayName: Apply
     jobs:
-    - job: apply
-      pool:
-        vmImage: ubuntu-latest
-      steps:
-      - task: TerraformInstaller@0
-        displayName: Install Terraform
-        inputs:
-          terraformVersion: 'latest'
-  
-    # Init
-      - task: TerraformCLI@0
-        displayName: Initialize Terraform
-        env:
-          ARM_SAS_TOKEN: $(sas_token)
-        inputs:
-          command: 'init'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
-          commandOptions: '-backend-config=storage_account_name=$(storageaccount) -backend-config=container_name=$(container_name) -backend-config=key=$(key)'
-          backendType: 'selfConfigured'
-  
-    # Apply
-      - task: TerraformCLI@0
-        displayName: Apply Terraform Deployment
-        env:
-          ARM_SAS_TOKEN: $(sas_token)
-          ARM_CLIENT_ID: $(az_client_id)
-          ARM_CLIENT_SECRET: $(az_client_secret)
-          ARM_SUBSCRIPTION_ID: $(az_subscription)
-          ARM_TENANT_ID: $(az_tenant)
-        inputs:
-          command: 'apply'
-          workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
-          commandOptions: '-auto-approve'
+      - job: apply
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: TerraformInstaller@0
+            displayName: Install Terraform
+            inputs:
+              terraformVersion: 'latest'
+
+          # Init
+          - task: TerraformCLI@0
+            displayName: Initialize Terraform
+            env:
+              ARM_SAS_TOKEN: $(sas_token)
+            inputs:
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
+              commandOptions: '-backend-config=storage_account_name=$(storageaccount) -backend-config=container_name=$(container_name) -backend-config=key=$(key)'
+              backendType: 'selfConfigured'
+
+          # Apply
+          - task: TerraformCLI@0
+            displayName: Apply Terraform Deployment
+            env:
+              ARM_SAS_TOKEN: $(sas_token)
+              ARM_CLIENT_ID: $(az_client_id)
+              ARM_CLIENT_SECRET: $(az_client_secret)
+              ARM_SUBSCRIPTION_ID: $(az_subscription)
+              ARM_TENANT_ID: $(az_tenant)
+            inputs:
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
+              commandOptions: '-auto-approve'
+
+
+
+
+
+
+
