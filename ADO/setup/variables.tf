@@ -32,10 +32,36 @@ variable "az_location" {
   default = "eastus"
 }
 
+variable "az_container_name" {
+  type        = string
+  description = "Name of container on storage account for Terraform state"
+  default     = "terraform-state"
+}
+
 variable "az_state_key" {
   type        = string
   description = "Name of key in storage account for Terraform state"
   default     = "terraform.tfstate"
+}
+
+variable "az_client_id" {
+  type        = string
+  description = "Client ID with permissions to create resources in Azure, use env variables"
+}
+
+variable "az_client_secret" {
+  type        = string
+  description = "Client secret with permissions to create resources in Azure, use env variables"
+}
+
+variable "az_subscription" {
+  type        = string
+  description = "Client ID subscription, use env variables"
+}
+
+variable "az_tenant" {
+  type        = string
+  description = "Client ID Azure AD tenant, use env variables"
 }
 
 resource "random_integer" "suffix" {
@@ -43,6 +69,18 @@ resource "random_integer" "suffix" {
   max = 99999
 }
 
+locals {
+  ado_project_name        = "${var.prefix}-project-${random_integer.suffix.result}"
+  ado_project_description = "Project for ${var.prefix}"
+  ado_project_visibility  = "private"
+  ado_pipeline_name_1     = "${var.prefix}-pipeline-1"
+
+  az_resource_group_name  = "${var.prefix}${random_integer.suffix.result}"
+  az_storage_account_name = "${lower(var.prefix)}${random_integer.suffix.result}"
+
+}
+
+/*
 locals {
   ado_project_name        = "${var.prefix}-project-${random_integer.suffix.result}"
   ado_project_description = "Project for ${var.prefix}"
@@ -62,8 +100,9 @@ locals {
     az-client-secret = random_password.resource_creation.result
     az-subscription = data.azurerm_client_config.current.subscription_id
     az-tenant = data.azurerm_client_config.current.tenant_id
-  }
+  } 
 
   azad_service_connection_sp_name = "${var.prefix}-service-connection-${random_integer.suffix.result}"
   azad_resource_creation_sp_name = "${var.prefix}-resource-creation-${random_integer.suffix.result}"
 }
+*/

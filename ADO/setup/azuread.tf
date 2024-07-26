@@ -7,7 +7,7 @@
 # you want to create resources. So we'll create two SPs.
 
 # Create SP for service connection in pipeline. Will be used to access KV.
-
+/*
 resource "azuread_application" "service_connection" {
   display_name = local.azad_service_connection_sp_name
 }
@@ -50,3 +50,4 @@ resource "azurerm_role_assignment" "resource_creation" {
   role_definition_name = "Contributor"
   principal_id         = azuread_service_principal.resource_creation.object_id
 }
+*/

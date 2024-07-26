@@ -1,3 +1,4 @@
+/*
 terraform {
   required_providers {
     azuredevops = {
@@ -28,3 +29,4 @@ terraform {
   }
 
 }
+*/

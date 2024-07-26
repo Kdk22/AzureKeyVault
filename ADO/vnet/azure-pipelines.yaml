@@ -39,7 +39,7 @@ stages:
         ARM_SAS_TOKEN: $(sas-token)
       inputs:
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/ADO/vnet'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
         commandOptions: '-backend-config=storage_account_name=$(storageaccount) -backend-config=container_name=$(container-name) -backend-config=key=$(key)'
         backendType: 'selfConfigured'
 
@@ -48,7 +48,7 @@ stages:
       displayName: Validate Config
       inputs:
         command: 'validate'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/ADO/vnet'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
     
 - stage: Plan
   displayName: Plan
@@ -78,7 +78,7 @@ stages:
         ARM_SAS_TOKEN: $(sas-token)
       inputs:
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/ADO/vnet'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
         commandOptions: '-backend-config=storage_account_name=$(storageaccount) -backend-config=container_name=$(container-name) -backend-config=key=$(key)'
         backendType: 'selfConfigured'
 
@@ -93,7 +93,7 @@ stages:
         ARM_TENANT_ID: $(az-tenant)
       inputs:
         command: 'plan'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/ADO/vnet'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
 
 # Approve
 - stage: Approve
@@ -137,7 +137,7 @@ stages:
         ARM_SAS_TOKEN: $(sas-token)
       inputs:
         command: 'init'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/ADO/vnet'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
         commandOptions: '-backend-config=storage_account_name=$(storageaccount) -backend-config=container_name=$(container-name) -backend-config=key=$(key)'
         backendType: 'selfConfigured'
 
@@ -152,5 +152,5 @@ stages:
         ARM_TENANT_ID: $(az-tenant)
       inputs:
         command: 'apply'
-        workingDirectory: '$(System.DefaultWorkingDirectory)/ADO/vnet'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
         commandOptions: '-auto-approve'
