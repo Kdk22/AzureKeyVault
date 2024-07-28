@@ -65,6 +65,7 @@ resource "azurerm_resource_group" "vnet" {
   location = var.region
 }
 
+
 module "network" {
   source              = "Azure/network/azurerm"
   version             = "3.1.1"
