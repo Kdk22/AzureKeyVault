@@ -126,10 +126,6 @@ stages:
               command: 'apply'
               workingDirectory: '$(System.DefaultWorkingDirectory)/AKV-SM/ADO/vnet'
               commandOptions: '-auto-approve'
-
-
-
-
-
+              
 
 
