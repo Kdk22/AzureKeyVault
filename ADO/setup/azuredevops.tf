@@ -1,8 +1,12 @@
 # Create ADO objects for pipeline
 
 provider "azuredevops" {
-  org_service_url = var.ado_org_service_url
+ org_service_url = "https://dev.azure.com/utft0"
+ # org_service_url = var.ado_org_service_url
   # Authentication through PAT defined with AZDO_PERSONAL_ACCESS_TOKEN 
+}
+provider "github"{
+  
 }
 
 resource "azuredevops_project" "project" {
@@ -102,7 +106,7 @@ resource "azuredevops_build_definition" "pipeline_1" {
 
   repository {
     repo_type             = "GitHub"
-    repo_id               = var.ado_github_repo
+    repo_id               = "Kdk22/AzureKeyVault"
     branch_name           = "main"
     yml_path              = var.ado_pipeline_yaml_path_1
     service_connection_id = azuredevops_serviceendpoint_github.serviceendpoint_github.id

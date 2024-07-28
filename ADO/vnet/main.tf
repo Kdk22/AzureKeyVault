@@ -24,23 +24,6 @@ terraform {
 # VARIABLES
 ###########################
 
-variable "ado_github_pat" {
-  type        = string
-  description = "Personal authentication token for GitHub repo"
-  sensitive   = true
-}
-
-variable "ado_org_service_url" {
-  type        = string
-  description = "Org service url for Azure DevOps"
-}
-
-variable "ado_github_repo" {
-  type        = string
-  description = "Name of the repository in the format <GitHub Org>/<RepoName>"
-  default     = "Kdk22/AzureKeyVault"
-}
-
 variable "region" {
   type        = string
   description = "Region in Azure"

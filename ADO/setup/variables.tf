@@ -1,3 +1,11 @@
+
+/*
+variable "ado_github_pat" {
+  type        = string
+  description = "Personal authentication token for GitHub repo"
+  sensitive   = true
+}
+
 variable "ado_org_service_url" {
   type        = string
   description = "Org service url for Azure DevOps"
@@ -8,18 +16,14 @@ variable "ado_github_repo" {
   description = "Name of the repository in the format <GitHub Org>/<RepoName>"
   default     = "Kdk22/AzureKeyVault"
 }
-
+*/
 variable "ado_pipeline_yaml_path_1" {
   type        = string
   description = "Path to the yaml for the first pipeline"
   default     = "ADO/vnet/azure-pipelines.yaml"
 }
 
-variable "ado_github_pat" {
-  type        = string
-  description = "Personal authentication token for GitHub repo"
-  sensitive   = true
-}
+
 
 variable "prefix" {
   type        = string
