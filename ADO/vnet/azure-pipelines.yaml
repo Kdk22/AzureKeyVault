@@ -7,7 +7,7 @@ trigger:
       - main
   paths:
     include:
-      - AKV-SM/ADO/vnet
+      - ADO/vnet
 
 stages:
   - stage: Validate
