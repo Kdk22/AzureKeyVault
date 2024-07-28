@@ -24,6 +24,12 @@ terraform {
 # VARIABLES
 ###########################
 
+variable "ado_github_pat" {
+  type        = string
+  description = "Personal authentication token for GitHub repo"
+  sensitive   = true
+}
+
 variable "ado_org_service_url" {
   type        = string
   description = "Org service url for Azure DevOps"
