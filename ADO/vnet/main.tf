@@ -30,11 +30,6 @@ variable "region" {
   default     = "eastus"
 }
 
-variable "prefix" {
-  type        = string
-  description = "prefix for naming"
-  default     = "tacos"
-}
 
 ###########################
 # PROVIDERS
