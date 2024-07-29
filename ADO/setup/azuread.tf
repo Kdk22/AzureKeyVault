@@ -1,3 +1,4 @@
+/*
 # The pipeline needs a service principal to use for an AzureRM service connection
 # It will need access to the Azure Key Vault
 
@@ -7,13 +8,13 @@
 # you want to create resources. So we'll create two SPs.
 
 # Create SP for service connection in pipeline. Will be used to access KV.
-/*
+
 resource "azuread_application" "service_connection" {
   display_name = local.azad_service_connection_sp_name
 }
 
 resource "azuread_service_principal" "service_connection" {
-  application_id = azuread_application.service_connection.application_id
+  application_id = azuread_application.service_connection.application_object_id
 }
 
 resource "random_password" "service_connection" {
