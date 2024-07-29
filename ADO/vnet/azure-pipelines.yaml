@@ -87,7 +87,7 @@ stages:
           - task: ManualValidation@0
             timeoutInMinutes: 60
             inputs:
-              notifyUsers: 'utft0@outlook.com'
+              notifyUsers: 'utft0@gmail.com'
               instructions: 'Review the plan in the next hour'
 
   - stage: Apply
